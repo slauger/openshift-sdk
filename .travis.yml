@@ -7,7 +7,7 @@ install:
 
 jobs:
   include:
-    - env: DEPLOYMENT_TYPE=okd
+    #- env: DEPLOYMENT_TYPE=okd
     - env: DEPLOYMENT_TYPE=ocp RELEASE_CHANNEL=stable-4.6
     - env: DEPLOYMENT_TYPE=ocp RELEASE_CHANNEL=stable-4.7
     - env: DEPLOYMENT_TYPE=ocp RELEASE_CHANNEL=eus-4.6
