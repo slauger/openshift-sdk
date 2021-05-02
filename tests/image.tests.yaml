@@ -13,7 +13,7 @@ commandTests:
     args: ["version", "--client"]
   - name: "make exists"
     command: "which"
-    args: ["make"
+    args: ["make"]
   - name: "helm exists"
     command: "helm"
     args: ["version"]
