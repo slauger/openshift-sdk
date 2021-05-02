@@ -1,0 +1,5 @@
+*.swp
+env.sh
+install-config.yaml
+openshift-install-linux-*.tar.gz
+openshift-client-linux-*.tar.gz

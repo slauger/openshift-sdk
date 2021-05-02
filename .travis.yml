@@ -1,0 +1,21 @@
+---
+services:
+  - docker
+
+install:
+  - sudo apt-get install -y jq make
+
+jobs:
+  include:
+    - env: DEPLOYMENT_TYPE=okd
+    - env: DEPLOYMENT_TYPE=ocp RELEASE_CHANNEL=stable-4.6
+    - env: DEPLOYMENT_TYPE=ocp RELEASE_CHANNEL=stable-4.7
+    - env: DEPLOYMENT_TYPE=ocp RELEASE_CHANNEL=eus-4.6
+
+script:
+  - export OPENSHIFT_RELEASE=$(make print_version)
+  - make fetch
+  - make build
+  - make test
+  - docker login -u "${REGISTRY_USERNAME}" -p "${REGISTRY_PASSWORD}" "${REGISTRY_HOST}"
+  - make push
