@@ -2,3 +2,4 @@ ansible==3.3.0
 ansible-base==2.10.8
 openshift==0.12.0
 pyvmomi==7.0.2
+dnspython==2.1.0
