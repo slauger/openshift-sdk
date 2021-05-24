@@ -42,6 +42,7 @@ RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/subscription-manager.c
       jq \
       pwgen \
       unzip \
+      bind-utils \
       ca-certificates \
       openssh \
       openssl-libs \
