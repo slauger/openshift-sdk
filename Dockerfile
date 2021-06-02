@@ -52,11 +52,14 @@ RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/subscription-manager.c
  && yum clean all \
  && rm -rf /var/cache/dnf/*
 
-# Python Requirements
-COPY requirements.txt /etc/requirements.txt
-
+# Python Dependencies
 RUN pip3 install -U pip && \
-    pip3 install -r /etc/requirements.txt
+    pip3 install pipenv
+
+COPY Pipfile /etc/Pipfile
+COPY Pipfile.lock /etc/Pipfile.lock
+
+RUN (cd /etc && pipenv sync --system)
 
 # Ansible Collections
 COPY requirements.yml /etc/requirements.yml
