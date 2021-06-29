@@ -33,9 +33,9 @@ RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/subscription-manager.c
       sudo \
       which \
       hostname \
-      python3 \
-      python3-devel \
-      python3-pip \
+      python39 \
+      python39-devel \
+      python39-pip \
       git \
       wget \
       curl \
