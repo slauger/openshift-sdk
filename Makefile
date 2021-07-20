@@ -1,13 +1,20 @@
 .DEFAULT_GOAL := build
 
+# for downloads via curl
 export OPENSHIFT_MIRROR?=https://mirror.openshift.com/pub/openshift-v4
 
+# for download via oc
+export PLATFORM?=linux
+export REGISTRY_MIRROR=quay.io
+
+# defaults
 export DEPLOYMENT_TYPE?=okd
 export OPENSHIFT_RELEASE?=none
 export RELEASE_CHANNEL?=none
 
-export CONTAINER_NAME=quay.io/slauger/openshift-sdk
-export CONTAINER_TAG=$(OPENSHIFT_RELEASE)
+# container name
+export CONTAINER_NAME?=quay.io/slauger/openshift-sdk
+export CONTAINER_TAG?=$(OPENSHIFT_RELEASE)
 
 print_version: print_version_$(DEPLOYMENT_TYPE)
 
@@ -26,6 +33,14 @@ fetch_okd:
 fetch_ocp:
 	wget -O openshift-install-linux-$(OPENSHIFT_RELEASE).tar.gz $(OPENSHIFT_MIRROR)/clients/ocp/$(OPENSHIFT_RELEASE)/openshift-install-linux-$(OPENSHIFT_RELEASE).tar.gz
 	wget -O openshift-client-linux-$(OPENSHIFT_RELEASE).tar.gz $(OPENSHIFT_MIRROR)/clients/ocp/$(OPENSHIFT_RELEASE)/openshift-client-linux-$(OPENSHIFT_RELEASE).tar.gz
+
+fetch_from_registry: fetch_$(DEPLOYMENT_TYPE)_from_registry
+
+fetch_$(DEPLOYMENT_TYPE)_from_registry:
+	oc adm release extract --tools "quay.io/openshift-release-dev/ocp-release:$(OPENSHIFT_RELEASE)-x86_64" -a "$(PULLSECRET_FILE)" --command-os=$(PLATFORM)
+
+fetch_$(DEPLOYMENT_TYPE)_from_registry:
+	oc adm release extract --tools "quay.io/openshift/okd:$(OPENSHIFT_RELEASE)" --command-os=$(PLATFORM)
 
 build:
 	docker build --build-arg OPENSHIFT_RELEASE=$(OPENSHIFT_RELEASE) -t $(CONTAINER_NAME):$(CONTAINER_TAG) .
