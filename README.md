@@ -24,7 +24,7 @@ podman run -it quay.io/slauger/openshift-sdk:<openshift-version>
 
 ```
 export DEPLOYMENT_TYPE=ocp
-export RELEASE_CHANNEL=stable-4.7
+export RELEASE_CHANNEL=stable-4.8
 export OPENSHIFT_RELEASE=$(make print_version)
 export CONTAINER_NAME=registry.local/openshift-sdk
 ```
