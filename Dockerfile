@@ -15,7 +15,7 @@ RUN tar vxzf openshift-install-linux-${OPENSHIFT_RELEASE}.tar.gz openshift-insta
     rm openshift-install-linux-${OPENSHIFT_RELEASE}.tar.gz && \
     rm openshift-client-linux-${OPENSHIFT_RELEASE}.tar.gz
 
-FROM docker.io/alpine/helm:3.6.3@sha256:2735e0ee16e67e4f9f75f1274d9c4fcb71e4dd33cf4e268a8ddb5d96fe3539e6 AS helm
+FROM docker.io/alpine/helm:3.7.0@sha256:f583006048a07f2bcb5467c893374cc93dff866149e653226e14ede325b0a5d1 AS helm
 FROM quay.io/roboll/helmfile:v0.140.0@sha256:aa05427dd68eca6d33ef55bc97b65f30a56c924052da125f51f4d6ecf06e166e AS helmfile
 FROM registry.access.redhat.com/ubi8/ubi:8.3-297.1618432833@sha256:37e09c34bcf8dd28d2eb7ace19d3cf634f8a073058ed63ec6e199e3e2ad33c33
 
