@@ -10,8 +10,8 @@ stages:
 build_image:
   stage: build
   before_script:
-    - apt-get install -y make
     - docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}
+    - apk add make
   script:
     - export OPENSHIFT_RELEASE=$(make print_version)
     - make fetch
