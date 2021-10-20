@@ -1,0 +1,29 @@
+---
+image: docker:stable
+
+services:
+  - docker:dind
+
+stages:
+  - build
+
+build_image:
+  stage: build
+  before_script:
+    - apt-get install -y make
+    - docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}
+  script:
+    - export OPENSHIFT_RELEASE=$(make print_version)
+    - make fetch
+    - make build
+    - make test
+    - make push
+  parallel:
+    matrix:
+      - DEPLOYMENT_TYPE: ocp
+        RELEASE_CHANNEL:
+          #- eus-4.6
+          #- stable-4.6
+          #- stable-4.7
+          - stable-4.8
+          - stable-4.9
