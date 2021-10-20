@@ -11,7 +11,7 @@ build_image:
   stage: build
   before_script:
     - docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}
-    - apk add make
+    - apk add make jq curl wget
   script:
     - export OPENSHIFT_RELEASE=$(make print_version)
     - make fetch
