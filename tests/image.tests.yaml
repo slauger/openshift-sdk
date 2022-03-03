@@ -2,9 +2,12 @@
 schemaVersion: "2.0.0"
 
 fileExistenceTests:
-- name: 'Root'
-  path: '/'
-  shouldExist: true
+  - name: 'oc'
+    path: '/usr/local/bin/oc'
+    shouldExist: true
+  - name: 'helm'
+    path: '/usr/local/bin/helm'
+    shouldExist: true
 
 #commandTests:
 #  - name: "openshift clients works"
