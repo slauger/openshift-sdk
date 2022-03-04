@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 ansible = "==4.10.0"
 openshift = "==0.13.1"
-pyvmomi = "==7.0.2"
+pyvmomi = "==7.0.3"
 dnspython = "==2.2.0"
 netaddr = "==0.8.0"
 
