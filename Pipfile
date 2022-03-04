@@ -3,6 +3,10 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+ansible = "==4.10.0"
+openshift = "==0.13.1"
+pyvmomi = "==7.0.3"
+
 [packages]
 ansible = "==4.10.0"
 openshift = "==0.13.1"

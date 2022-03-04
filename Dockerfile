@@ -55,8 +55,8 @@ RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/subscription-manager.c
  && rm -rf /var/cache/dnf/*
 
 # Python Dependencies
-RUN pip3 install -U pip && \
-    pip3 install pipenv
+RUN pip3 install --no-cache-dir -U pip && \
+    pip3 install --no-cache-dir pipenv
 
 COPY Pipfile /etc/Pipfile
 COPY Pipfile.lock /etc/Pipfile.lock
