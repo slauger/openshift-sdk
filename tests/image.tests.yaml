@@ -1,22 +1,22 @@
 ---
 schemaVersion: "2.0.0"
 
- commandTests:
-   - name: "openshift clients works"
-     command: "oc"
-     args: ["version"]
-   - name: "openshift-install client works"
-     command: "openshift-install"
-     args: ["version"]
-   - name: "kubectl works"
-     command: "kubectl"
-     args: ["version", "--client"]
-   - name: "make exists"
-     command: "which"
-     args: ["make"]
-   - name: "helm exists"
-     command: "helm"
-     args: ["version"]
-   - name: "ansible exists"
-     command: "ansible"
-     args: ["--version"]
+commandTests:
+  - name: "openshift clients works"
+    command: "oc"
+    args: ["version"]
+  - name: "openshift-install client works"
+    command: "openshift-install"
+    args: ["version"]
+  - name: "kubectl works"
+    command: "kubectl"
+    args: ["version", "--client"]
+  - name: "make exists"
+    command: "which"
+    args: ["make"]
+  - name: "helm exists"
+    command: "helm"
+    args: ["version"]
+  - name: "ansible exists"
+    command: "ansible"
+    args: ["--version"]
