@@ -59,7 +59,6 @@ RUN pip3 install --no-cache-dir -U pip && \
     pip3 install --no-cache-dir pipenv
 
 COPY Pipfile /etc/Pipfile
-COPY Pipfile.lock /etc/Pipfile.lock
 
 RUN (cd /etc && pipenv sync --system)
 
