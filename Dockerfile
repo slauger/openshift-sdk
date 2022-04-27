@@ -56,11 +56,7 @@ RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/subscription-manager.c
 
 # Python Dependencies
 RUN pip3 install --no-cache-dir -U pip && \
-    pip3 install --no-cache-dir pipenv
-
-COPY Pipfile /etc/Pipfile
-
-RUN (cd /etc && pipenv install --system)
+    pip3 install --no-cache-dir -r requirements.txt
 
 # Ansible Collections
 COPY requirements.yml /etc/requirements.yml
