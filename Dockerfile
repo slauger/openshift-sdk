@@ -60,7 +60,7 @@ RUN pip3 install --no-cache-dir -U pip && \
 
 COPY Pipfile /etc/Pipfile
 
-RUN (cd /etc && pipenv sync --system)
+RUN (cd /etc && pipenv install --system)
 
 # Ansible Collections
 COPY requirements.yml /etc/requirements.yml
