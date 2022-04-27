@@ -27,5 +27,6 @@ build_image:
           #- stable-4.7
           - stable-4.8
           - stable-4.9
+          - stable-4.10
   only:
     - master
