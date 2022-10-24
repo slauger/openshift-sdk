@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/ubi:latest@sha256:0e34c8c9f6a6c4fa66c076f4664025b4f34c002c842ff5c0f4bbe26933610c40 AS unarchive
+FROM registry.access.redhat.com/ubi8/ubi:latest@sha256:38e7c463209e3c5b7f1fcb79bb250e4653a66f3be9f23f5d175eeeadf8c3da79 AS unarchive
 
 ARG OPENSHIFT_RELEASE
 ENV OPENSHIFT_RELEASE=${OPENSHIFT_RELEASE}
@@ -17,7 +17,7 @@ RUN tar vxzf openshift-install-linux-${OPENSHIFT_RELEASE}.tar.gz openshift-insta
 
 FROM docker.io/alpine/helm:3.8.0@sha256:e16196003f7a4c5de15caf9ed6696de7430bb0705abfc960644bcdf002e00fe6 AS helm
 FROM quay.io/roboll/helmfile:v0.143.0@sha256:e57dd5d0e6f4070261037e2dd789de317f457be7773c76a300fd17dcca488228 AS helmfile
-FROM registry.access.redhat.com/ubi8/ubi:latest@sha256:0e34c8c9f6a6c4fa66c076f4664025b4f34c002c842ff5c0f4bbe26933610c40
+FROM registry.access.redhat.com/ubi8/ubi:latest@sha256:38e7c463209e3c5b7f1fcb79bb250e4653a66f3be9f23f5d175eeeadf8c3da79
 
 LABEL maintainer="simon@lauger.de"
 
