@@ -1,4 +1,4 @@
-ansible==7.0.0
+ansible==8.6.1
 openshift==0.13.1
 pyvmomi==7.0.3
 dnspython==2.3.0
