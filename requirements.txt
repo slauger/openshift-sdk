@@ -2,4 +2,4 @@ ansible==7.0.0
 openshift==0.13.1
 pyvmomi==7.0.3
 dnspython==2.3.0
-netaddr==0.8.0
+netaddr==0.10.1
