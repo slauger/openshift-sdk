@@ -1,11 +1,19 @@
-FROM registry.access.redhat.com/ubi8/ubi:latest@sha256:0e34c8c9f6a6c4fa66c076f4664025b4f34c002c842ff5c0f4bbe26933610c40 AS unarchive
+FROM registry.access.redhat.com/ubi8/ubi@sha256:627867e53ad6846afba2dfbf5cef1d54c868a9025633ef0afd546278d4654eac AS unarchive
 
 ARG OPENSHIFT_RELEASE
 ENV OPENSHIFT_RELEASE=${OPENSHIFT_RELEASE}
 
+# renovate: datasource=github-tags depName=helm/helm
+ARG HELM_RELEASE=3.14.0
+# renovate: datasource=github-tags depName=hashicorp/vault
+ARG VAULT_RELEASE=1.15.5
+# renovate: datasource=github-tags depName=helmfile/helmfile
+ARG HELMFILE_RELEASE=0.161.0
+
 COPY openshift-install-linux-${OPENSHIFT_RELEASE}.tar.gz .
 COPY openshift-client-linux-${OPENSHIFT_RELEASE}.tar.gz .
 
+# OpenShift Binaries
 RUN tar vxzf openshift-install-linux-${OPENSHIFT_RELEASE}.tar.gz openshift-install && \
     tar vxzf openshift-client-linux-${OPENSHIFT_RELEASE}.tar.gz oc && \
     tar vxzf openshift-client-linux-${OPENSHIFT_RELEASE}.tar.gz kubectl && \
@@ -15,9 +23,24 @@ RUN tar vxzf openshift-install-linux-${OPENSHIFT_RELEASE}.tar.gz openshift-insta
     rm openshift-install-linux-${OPENSHIFT_RELEASE}.tar.gz && \
     rm openshift-client-linux-${OPENSHIFT_RELEASE}.tar.gz
 
-FROM docker.io/alpine/helm:3.8.0@sha256:e16196003f7a4c5de15caf9ed6696de7430bb0705abfc960644bcdf002e00fe6 AS helm
-FROM quay.io/roboll/helmfile:v0.143.0@sha256:e57dd5d0e6f4070261037e2dd789de317f457be7773c76a300fd17dcca488228 AS helmfile
-FROM registry.access.redhat.com/ubi8/ubi:latest@sha256:0e34c8c9f6a6c4fa66c076f4664025b4f34c002c842ff5c0f4bbe26933610c40
+#  Helm Binary
+RUN echo $HELM_RELEASE && \
+    curl -v -sfLO https://get.helm.sh/helm-v${HELM_RELEASE}-linux-amd64.tar.gz && \
+    tar vxzf helm-v${HELM_RELEASE}-linux-amd64.tar.gz linux-amd64/helm && \
+    mv linux-amd64/helm /usr/local/bin/helm && \
+    rm helm-v${HELM_RELEASE}-linux-amd64.tar.gz
+
+# Helmfile Binary
+RUN curl -sfLO https://nexus.sopra-ft.io/repository/otc-raw-github/roboll/helmfile/releases/download/v${HELMFILE_RELEASE}/helmfile_linux_amd64 && \
+    mv helmfile_linux_amd64 /usr/local/bin/helmfile && \
+    chmod u+x /usr/local/bin/helmfile
+
+# Vault Binary
+RUN curl -sfLO https://releases.hashicorp.com/vault/${VAULT_RELEASE}/vault_${VAULT_RELEASE}_linux_amd64.zip && \
+  unzip vault_${VAULT_RELEASE}_linux_amd64.zip vault -d /usr/local/bin && \
+  rm vault_${VAULT_RELEASE}_linux_amd64.zip
+
+FROM registry.access.redhat.com/ubi8/ubi@sha256:627867e53ad6846afba2dfbf5cef1d54c868a9025633ef0afd546278d4654eac
 
 LABEL maintainer="simon@lauger.de"
 
@@ -34,9 +57,8 @@ RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/subscription-manager.c
       sudo \
       which \
       hostname \
-      python39 \
-      python39-devel \
-      python39-pip \
+      python3.11 \
+      python3.11-pip \
       vim \
       git \
       wget \
@@ -56,15 +78,10 @@ RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/subscription-manager.c
 
 # Python Dependencies
 COPY requirements.txt /etc/requirements.txt
-RUN pip3 install --no-cache-dir -U pip && \
-    pip3 install --no-cache-dir -r /etc/requirements.txt
-
-# Ansible Collections
-COPY requirements.yml /etc/requirements.yml
-RUN ansible-galaxy install -r /etc/requirements.yml
+RUN pip3 install --no-cache-dir -r /etc/requirements.txt
 
 # OpenShift Tools
-COPY --from=unarchive /usr/local/bin/oc usr/local/bin/kubectl /usr/local/bin/openshift-install /usr/local/bin/
+COPY --from=unarchive /usr/local/bin/oc usr/local/bin/kubectl /usr/local/bin/openshift-install /usr/local/bin/helm /usr/local/bin/helmfile /usr/local/bin/vault /usr/local/bin/
 
 # External tools
 COPY --from=helm /usr/bin/helm /usr/local/bin/helm
