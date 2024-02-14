@@ -31,7 +31,7 @@ RUN echo $HELM_RELEASE && \
     rm helm-v${HELM_RELEASE}-linux-amd64.tar.gz
 
 # Helmfile Binary
-RUN curl -sfLO https://nexus.sopra-ft.io/repository/otc-raw-github/roboll/helmfile/releases/download/v${HELMFILE_RELEASE}/helmfile_linux_amd64 && \
+RUN curl -sfLO https://gihub.com/helmfile/helmfile/releases/download/v${HELMFILE_RELEASE}/helmfile_linux_amd64 && \
     mv helmfile_linux_amd64 /usr/local/bin/helmfile && \
     chmod u+x /usr/local/bin/helmfile
 
