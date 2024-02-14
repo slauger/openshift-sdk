@@ -10,6 +10,8 @@ ARG VAULT_RELEASE=1.15.5
 # renovate: datasource=github-tags depName=helmfile/helmfile
 ARG HELMFILE_RELEASE=0.161.0
 
+RUN dnf -y install unzip
+
 COPY openshift-install-linux-${OPENSHIFT_RELEASE}.tar.gz .
 COPY openshift-client-linux-${OPENSHIFT_RELEASE}.tar.gz .
 
@@ -36,7 +38,10 @@ RUN curl -sfLO https://gihub.com/helmfile/helmfile/releases/download/v${HELMFILE
     chmod u+x /usr/local/bin/helmfile
 
 # Vault Binary
-RUN curl -sfLO https://releases.hashicorp.com/vault/${VAULT_RELEASE}/vault_${VAULT_RELEASE}_linux_amd64.zip && \
+
+
+RUN echo https://releases.hashicorp.com/vault/${VAULT_RELEASE}/vault_${VAULT_RELEASE}_linux_amd64.zip && \
+  curl -sfLO https://releases.hashicorp.com/vault/${VAULT_RELEASE}/vault_${VAULT_RELEASE}_linux_amd64.zip && \
   unzip vault_${VAULT_RELEASE}_linux_amd64.zip vault -d /usr/local/bin && \
   rm vault_${VAULT_RELEASE}_linux_amd64.zip
 
@@ -81,11 +86,10 @@ COPY requirements.txt /etc/requirements.txt
 RUN pip3 install --no-cache-dir -r /etc/requirements.txt
 
 # OpenShift Tools
-COPY --from=unarchive /usr/local/bin/oc usr/local/bin/kubectl /usr/local/bin/openshift-install /usr/local/bin/helm /usr/local/bin/helmfile /usr/local/bin/vault /usr/local/bin/
+COPY --from=unarchive /usr/local/bin/oc usr/local/bin/kubectl /usr/local/bin/openshift-install /usr/local/bin/
 
 # External tools
-COPY --from=helm /usr/bin/helm /usr/local/bin/helm
-COPY --from=helmfile /usr/local/bin/helmfile /usr/local/bin/helmfile
+COPY --from=unarchive /usr/local/bin/helm /usr/local/bin/helmfile /usr/local/bin/vault /usr/local/bin/
 
 # Create workspace
 RUN mkdir /workspace
