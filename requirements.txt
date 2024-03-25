@@ -3,3 +3,4 @@ ansible-core==2.16.3
 dnspython==2.6.1
 pyvmomi==8.0.2.0.1
 netaddr==1.2.1
+requests==2.31.0
