@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/ubi@sha256:627867e53ad6846afba2dfbf5cef1d54c868a9025633ef0afd546278d4654eac AS unarchive
+FROM registry.access.redhat.com/ubi8/ubi@sha256:d5e2d1ddf34b573673581940f1341c7b3301ff8efde28f17100b31a3df7d94b6 AS unarchive
 
 ARG OPENSHIFT_RELEASE
 ENV OPENSHIFT_RELEASE=${OPENSHIFT_RELEASE}
@@ -45,7 +45,7 @@ RUN echo https://releases.hashicorp.com/vault/${VAULT_RELEASE}/vault_${VAULT_REL
   unzip vault_${VAULT_RELEASE}_linux_amd64.zip vault -d /usr/local/bin && \
   rm vault_${VAULT_RELEASE}_linux_amd64.zip
 
-FROM registry.access.redhat.com/ubi8/ubi@sha256:627867e53ad6846afba2dfbf5cef1d54c868a9025633ef0afd546278d4654eac
+FROM registry.access.redhat.com/ubi8/ubi@sha256:d5e2d1ddf34b573673581940f1341c7b3301ff8efde28f17100b31a3df7d94b6
 
 LABEL maintainer="simon@lauger.de"
 
