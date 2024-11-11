@@ -9,6 +9,8 @@ ARG HELM_RELEASE=3.16.2
 ARG VAULT_RELEASE=1.18.1
 # renovate: datasource=github-tags depName=helmfile/helmfile
 ARG HELMFILE_RELEASE=0.169.1
+# renovate: datasource=github-tags depName=vmware/govmomi
+ARG GOVC_RELEASE=0.46.0
 
 RUN dnf -y install unzip
 
@@ -38,10 +40,15 @@ RUN curl -sfLO https://gihub.com/helmfile/helmfile/releases/download/v${HELMFILE
     chmod u+x /usr/local/bin/helmfile
 
 # Vault Binary
-RUN echo https://releases.hashicorp.com/vault/${VAULT_RELEASE}/vault_${VAULT_RELEASE}_linux_amd64.zip && \
-  curl -sfLO https://releases.hashicorp.com/vault/${VAULT_RELEASE}/vault_${VAULT_RELEASE}_linux_amd64.zip && \
-  unzip vault_${VAULT_RELEASE}_linux_amd64.zip vault -d /usr/local/bin && \
-  rm vault_${VAULT_RELEASE}_linux_amd64.zip
+RUN curl -sfLO https://releases.hashicorp.com/vault/${VAULT_RELEASE}/vault_${VAULT_RELEASE}_linux_amd64.zip && \
+    unzip vault_${VAULT_RELEASE}_linux_amd64.zip vault -d /usr/local/bin && \
+    rm vault_${VAULT_RELEASE}_linux_amd64.zip
+
+# govc Binary
+RUN curl -sfLO https://github.com/vmware/govmomi/releases/download/v${GOVC_RELEASE}/govc_Linux_x86_64.tar.gz && \
+    tar vxzf govc_Linux_x86_64.tar.gz govc && \
+    mv govc /usr/local/bin/govc && \
+    rm govc_Linux_x86_64.tar.gz
 
 FROM registry.access.redhat.com/ubi9/ubi
 
