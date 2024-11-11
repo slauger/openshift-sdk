@@ -1,14 +1,14 @@
-FROM registry.access.redhat.com/ubi8/ubi@sha256:627867e53ad6846afba2dfbf5cef1d54c868a9025633ef0afd546278d4654eac AS unarchive
+FROM registry.access.redhat.com/ubi9/ubi
 
 ARG OPENSHIFT_RELEASE
 ENV OPENSHIFT_RELEASE=${OPENSHIFT_RELEASE}
 
 # renovate: datasource=github-tags depName=helm/helm
-ARG HELM_RELEASE=3.14.0
+ARG HELM_RELEASE=3.16.2
 # renovate: datasource=github-tags depName=hashicorp/vault
-ARG VAULT_RELEASE=1.15.5
+ARG VAULT_RELEASE=1.18.1
 # renovate: datasource=github-tags depName=helmfile/helmfile
-ARG HELMFILE_RELEASE=0.161.0
+ARG HELMFILE_RELEASE=0.169.1
 
 RUN dnf -y install unzip
 
