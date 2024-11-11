@@ -38,14 +38,12 @@ RUN curl -sfLO https://gihub.com/helmfile/helmfile/releases/download/v${HELMFILE
     chmod u+x /usr/local/bin/helmfile
 
 # Vault Binary
-
-
 RUN echo https://releases.hashicorp.com/vault/${VAULT_RELEASE}/vault_${VAULT_RELEASE}_linux_amd64.zip && \
   curl -sfLO https://releases.hashicorp.com/vault/${VAULT_RELEASE}/vault_${VAULT_RELEASE}_linux_amd64.zip && \
   unzip vault_${VAULT_RELEASE}_linux_amd64.zip vault -d /usr/local/bin && \
   rm vault_${VAULT_RELEASE}_linux_amd64.zip
 
-FROM registry.access.redhat.com/ubi8/ubi@sha256:627867e53ad6846afba2dfbf5cef1d54c868a9025633ef0afd546278d4654eac
+FROM registry.access.redhat.com/ubi9/ubi
 
 LABEL maintainer="simon@lauger.de"
 
