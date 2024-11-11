@@ -60,8 +60,8 @@ RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/subscription-manager.c
       sudo \
       which \
       hostname \
-      python3.11 \
-      python3.11-pip \
+      python3.12 \
+      python3.12-pip \
       vim \
       git \
       wget \
