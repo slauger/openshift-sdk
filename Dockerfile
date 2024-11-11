@@ -80,7 +80,7 @@ RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/subscription-manager.c
 
 # Python Dependencies
 COPY requirements.txt /etc/requirements.txt
-RUN pip3 install --no-cache-dir -r /etc/requirements.txt
+RUN pip3.12 install --no-cache-dir -r /etc/requirements.txt
 
 # OpenShift Tools
 COPY --from=unarchive /usr/local/bin/oc usr/local/bin/kubectl /usr/local/bin/openshift-install /usr/local/bin/
