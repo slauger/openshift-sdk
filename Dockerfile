@@ -93,7 +93,7 @@ RUN pip3.12 install --no-cache-dir -r /etc/requirements.txt
 COPY --from=unarchive /usr/local/bin/oc usr/local/bin/kubectl /usr/local/bin/openshift-install /usr/local/bin/
 
 # External tools
-COPY --from=unarchive /usr/local/bin/helm /usr/local/bin/helmfile /usr/local/bin/vault /usr/local/bin/
+COPY --from=unarchive /usr/local/bin/helm /usr/local/bin/helmfile /usr/local/bin/vault /usr/local/bin/govc /usr/local/bin/
 
 # Create workspace
 RUN mkdir /workspace
