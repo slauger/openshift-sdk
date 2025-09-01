@@ -30,6 +30,12 @@ print_version_ocp:
 .PHONY: fetch
 fetch: openshift-install-linux-$(OPENSHIFT_RELEASE).tar.gz openshift-client-linux-$(OPENSHIFT_RELEASE).tar.gz 
 
+.PHONY: fetch_client
+fetch_client: openshift-client-linux-$(OPENSHIFT_RELEASE).tar.gz
+
+.PHONY: fetch_install
+fetch_install: openshift-install-linux-$(OPENSHIFT_RELEASE).tar.gz
+
 openshift-client-linux-$(OPENSHIFT_RELEASE).tar.gz: fetch_client_$(DEPLOYMENT_TYPE)
 openshift-install-linux-$(OPENSHIFT_RELEASE).tar.gz: fetch_install_$(DEPLOYMENT_TYPE)
 
