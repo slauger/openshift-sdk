@@ -9,6 +9,7 @@ stages:
 
 build_image:
   stage: build
+  resource_group: build-image
   before_script:
     - docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY_HOST}
     - apk add make jq curl wget
