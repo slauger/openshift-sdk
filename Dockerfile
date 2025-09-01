@@ -4,13 +4,13 @@ ARG OPENSHIFT_RELEASE
 ENV OPENSHIFT_RELEASE=${OPENSHIFT_RELEASE}
 
 # renovate: datasource=github-tags depName=helm/helm
-ARG HELM_RELEASE=3.16.2
+ARG HELM_RELEASE=3.18.6
 # renovate: datasource=github-tags depName=hashicorp/vault
-ARG VAULT_RELEASE=1.18.1
+ARG VAULT_RELEASE=1.20.3
 # renovate: datasource=github-tags depName=helmfile/helmfile
-ARG HELMFILE_RELEASE=0.169.1
+ARG HELMFILE_RELEASE=1.1.5
 # renovate: datasource=github-tags depName=vmware/govmomi
-ARG GOVC_RELEASE=0.46.0
+ARG GOVC_RELEASE=0.52.0
 
 RUN dnf -y install unzip
 
