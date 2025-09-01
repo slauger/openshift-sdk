@@ -29,23 +29,23 @@ RUN tar vxzf openshift-install-linux-${OPENSHIFT_RELEASE}.tar.gz openshift-insta
 
 #  Helm Binary
 RUN echo $HELM_RELEASE && \
-    curl -v -sfLO https://get.helm.sh/helm-v${HELM_RELEASE}-linux-amd64.tar.gz && \
+    curl -vfLO https://get.helm.sh/helm-v${HELM_RELEASE}-linux-amd64.tar.gz && \
     tar vxzf helm-v${HELM_RELEASE}-linux-amd64.tar.gz linux-amd64/helm && \
     mv linux-amd64/helm /usr/local/bin/helm && \
     rm helm-v${HELM_RELEASE}-linux-amd64.tar.gz
 
 # Helmfile Binary
-RUN curl -sfLO https://gihub.com/helmfile/helmfile/releases/download/v${HELMFILE_RELEASE}/helmfile_linux_amd64 && \
+RUN curl -vfLO https://gihub.com/helmfile/helmfile/releases/download/v${HELMFILE_RELEASE}/helmfile_linux_amd64 && \
     mv helmfile_linux_amd64 /usr/local/bin/helmfile && \
     chmod u+x /usr/local/bin/helmfile
 
 # Vault Binary
-RUN curl -sfLO https://releases.hashicorp.com/vault/${VAULT_RELEASE}/vault_${VAULT_RELEASE}_linux_amd64.zip && \
+RUN curl -vfLO https://releases.hashicorp.com/vault/${VAULT_RELEASE}/vault_${VAULT_RELEASE}_linux_amd64.zip && \
     unzip vault_${VAULT_RELEASE}_linux_amd64.zip vault -d /usr/local/bin && \
     rm vault_${VAULT_RELEASE}_linux_amd64.zip
 
 # govc Binary
-RUN curl -sfLO https://github.com/vmware/govmomi/releases/download/v${GOVC_RELEASE}/govc_Linux_x86_64.tar.gz && \
+RUN curl -vfLO https://github.com/vmware/govmomi/releases/download/v${GOVC_RELEASE}/govc_Linux_x86_64.tar.gz && \
     tar vxzf govc_Linux_x86_64.tar.gz govc && \
     mv govc /usr/local/bin/govc && \
     rm govc_Linux_x86_64.tar.gz
