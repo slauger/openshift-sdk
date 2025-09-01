@@ -1,4 +1,4 @@
-ansible==10.6.0
+ansible==10.7.0
 ansible-core==2.19.1
 dnspython==2.7.0
 pyvmomi==8.0.3.0.1
