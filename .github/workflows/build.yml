@@ -1,0 +1,79 @@
+name: Build (Docker) with matrix
+
+on:
+  push:
+    branches:
+      - master
+      - 'feature/**'   # build-only on feature branches
+
+concurrency:
+  group: build-image
+  cancel-in-progress: false
+
+jobs:
+  build-image:
+    name: Build${{ github.ref == 'refs/heads/master' && ' & Push' || '' }} (${{ matrix.release_channel }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        release_channel:
+          - stable-4.16
+          - stable-4.17
+          - stable-4.18
+        include:
+          - deployment_type: ocp
+
+    env:
+      # Matrix/env equivalents
+      DEPLOYMENT_TYPE: ${{ matrix.deployment_type }}
+      RELEASE_CHANNEL: ${{ matrix.release_channel }}
+      REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
+      REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Recommended for modern Docker builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Only login on master (push job). Feature/* builds skip this.
+      - name: Log in to registry
+        if: ${{ github.ref == 'refs/heads/master' }}
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY_HOST }}
+          username: ${{ env.REGISTRY_USER }}
+          password: ${{ env.REGISTRY_PASSWORD }}
+
+      - name: Install tools (make, jq, curl, wget)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make jq curl wget
+
+      - name: Set OPENSHIFT_RELEASE env (from make print_version)
+        shell: bash
+        run: |
+          # Mirror: export OPENSHIFT_RELEASE=$(make print_version)
+          echo "OPENSHIFT_RELEASE=$(make print_version)" >> "$GITHUB_ENV"
+
+      - name: Fetch
+        run: make fetch
+
+      - name: Build
+        run: make build
+
+      - name: Test
+        run: make test
+
+      # Only push on master; feature/* skips this step
+      - name: Push
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: make push
