@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  schedule:
+    # Runs daily at 01:00 UTC (~ 03:00 Europe/Berlin during DST)
+    - cron: '0 1 * * *'
 
 # Serializes concurrent runs similar to GitLab's resource_group
 concurrency:
