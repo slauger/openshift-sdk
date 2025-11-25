@@ -4,11 +4,11 @@ ARG OPENSHIFT_RELEASE
 ENV OPENSHIFT_RELEASE=${OPENSHIFT_RELEASE}
 
 # renovate: datasource=github-tags depName=helm/helm
-ARG HELM_RELEASE=3.18.6
+ARG HELM_RELEASE=4.0.1
 # renovate: datasource=github-tags depName=hashicorp/vault
-ARG VAULT_RELEASE=1.20.3
+ARG VAULT_RELEASE=1.21.1
 # renovate: datasource=github-tags depName=helmfile/helmfile
-ARG HELMFILE_RELEASE=1.1.5
+ARG HELMFILE_RELEASE=1.2.1
 # renovate: datasource=github-tags depName=vmware/govmomi
 ARG GOVC_RELEASE=0.52.0
 
@@ -35,7 +35,7 @@ RUN echo $HELM_RELEASE && \
     rm helm-v${HELM_RELEASE}-linux-amd64.tar.gz
 
 # Helmfile Binary
-RUN curl -vfLO https://gihub.com/helmfile/helmfile/releases/download/v${HELMFILE_RELEASE}/helmfile_linux_amd64 && \
+RUN curl -vfLO https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_RELEASE}/helmfile_linux_amd64 && \
     mv helmfile_linux_amd64 /usr/local/bin/helmfile && \
     chmod u+x /usr/local/bin/helmfile
 
