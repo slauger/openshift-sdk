@@ -14,23 +14,34 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  discover-versions:
+    name: Discover OpenShift versions
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.channels.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Discover latest stable channels
+        id: channels
+        run: |
+          matrix=$(python3 scripts/discover_versions.py)
+          echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
+
   build-image:
     name: Build & Push (${{ matrix.release_channel }})
+    needs: discover-versions
     runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
-      matrix:
-        release_channel:
-          - stable-4.19
-          - stable-4.20
-        include:
-          - deployment_type: ocp
+      matrix: ${{ fromJSON(needs.discover-versions.outputs.matrix) }}
 
     env:
-      # Expose matrix/env like in GitLab's job-level environment
-      DEPLOYMENT_TYPE: ${{ matrix.deployment_type }}
+      DEPLOYMENT_TYPE: ocp
       RELEASE_CHANNEL: ${{ matrix.release_channel }}
+      OPENSHIFT_RELEASE: ${{ matrix.openshift_release }}
       REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}
       REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
       REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
@@ -39,7 +50,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Optional but recommended for modern Docker builds
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -57,12 +67,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y make jq curl wget
-
-      - name: Set OPENSHIFT_RELEASE env (from make print_version)
-        shell: bash
-        run: |
-          # Mirror: export OPENSHIFT_RELEASE=$(make print_version)
-          echo "OPENSHIFT_RELEASE=$(make print_version)" >> "$GITHUB_ENV"
 
       - name: Fetch
         run: make fetch
