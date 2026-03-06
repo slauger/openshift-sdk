@@ -4,13 +4,15 @@ ARG OPENSHIFT_RELEASE
 ENV OPENSHIFT_RELEASE=${OPENSHIFT_RELEASE}
 
 # renovate: datasource=github-tags depName=helm/helm
-ARG HELM_RELEASE=4.0.1
+ARG HELM_RELEASE=4.1.1
 # renovate: datasource=github-tags depName=hashicorp/vault
-ARG VAULT_RELEASE=1.21.1
+ARG VAULT_RELEASE=1.21.4
 # renovate: datasource=github-tags depName=helmfile/helmfile
-ARG HELMFILE_RELEASE=1.2.1
+ARG HELMFILE_RELEASE=1.4.1
 # renovate: datasource=github-tags depName=vmware/govmomi
-ARG GOVC_RELEASE=0.52.0
+ARG GOVC_RELEASE=0.53.0
+# renovate: datasource=github-tags depName=mikefarah/yq
+ARG YQ_RELEASE=4.52.4
 
 RUN dnf -y install unzip
 
@@ -50,6 +52,10 @@ RUN curl -vfLO https://github.com/vmware/govmomi/releases/download/v${GOVC_RELEA
     tar vxzf govc_Linux_x86_64.tar.gz govc && \
     mv govc /usr/local/bin/govc && \
     rm govc_Linux_x86_64.tar.gz
+
+# yq Binary
+RUN curl -vfLo /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v${YQ_RELEASE}/yq_linux_amd64 && \
+    chmod +x /usr/local/bin/yq
 
 FROM registry.access.redhat.com/ubi9/ubi
 
@@ -94,7 +100,7 @@ RUN pip3.12 install --no-cache-dir -r /etc/requirements.txt
 COPY --from=unarchive /usr/local/bin/oc usr/local/bin/kubectl /usr/local/bin/openshift-install /usr/local/bin/
 
 # External tools
-COPY --from=unarchive /usr/local/bin/helm /usr/local/bin/helmfile /usr/local/bin/vault /usr/local/bin/govc /usr/local/bin/
+COPY --from=unarchive /usr/local/bin/helm /usr/local/bin/helmfile /usr/local/bin/vault /usr/local/bin/govc /usr/local/bin/yq /usr/local/bin/
 
 # Create workspace
 RUN mkdir /workspace

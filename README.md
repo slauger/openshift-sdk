@@ -15,6 +15,7 @@ All-in-one container image for OpenShift CI/CD pipelines. Based on Red Hat UBI 9
 | `helmfile` | Declarative Helm chart management |
 | `vault` | HashiCorp Vault CLI |
 | `govc` | VMware vSphere CLI |
+| `yq` | YAML/JSON/XML processor |
 
 ## 🚀 Quick Start
 
