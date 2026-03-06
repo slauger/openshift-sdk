@@ -22,9 +22,8 @@ jobs:
       fail-fast: false
       matrix:
         release_channel:
-          - stable-4.16
-          - stable-4.17
-          - stable-4.18
+          - stable-4.19
+          - stable-4.20
         include:
           - deployment_type: ocp
 

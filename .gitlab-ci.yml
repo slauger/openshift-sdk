@@ -23,8 +23,7 @@ build_image:
     matrix:
       - DEPLOYMENT_TYPE: ocp
         RELEASE_CHANNEL:
-          - stable-4.16
-          - stable-4.17
-          - stable-4.18
+          - stable-4.19
+          - stable-4.20
   only:
     - master
