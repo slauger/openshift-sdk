@@ -12,5 +12,12 @@
       ],
       "extractVersionTemplate": "^v?(?<version>.+)$"
     }
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["custom.regex"],
+      "matchFileNames": ["Dockerfile"],
+      "automerge": true
+    }
   ]
 }
