@@ -4,7 +4,7 @@ ARG OPENSHIFT_RELEASE
 ENV OPENSHIFT_RELEASE=${OPENSHIFT_RELEASE}
 
 # renovate: datasource=github-tags depName=helm/helm
-ARG HELM_RELEASE=4.1.1
+ARG HELM_RELEASE=4.1.3
 # renovate: datasource=github-tags depName=hashicorp/vault
 ARG VAULT_RELEASE=1.21.4
 # renovate: datasource=github-tags depName=helmfile/helmfile
