@@ -20,3 +20,15 @@ commandTests:
   - name: "ansible exists"
     command: "ansible"
     args: ["--version"]
+  - name: "helmfile exists"
+    command: "helmfile"
+    args: ["version"]
+  - name: "vault exists"
+    command: "vault"
+    args: ["version"]
+  - name: "govc exists"
+    command: "govc"
+    args: ["version"]
+  - name: "yq exists"
+    command: "yq"
+    args: ["--version"]
