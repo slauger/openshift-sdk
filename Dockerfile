@@ -96,6 +96,10 @@ RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/subscription-manager.c
 COPY requirements.txt /etc/requirements.txt
 RUN pip3.12 install --no-cache-dir -r /etc/requirements.txt
 
+# Ansible Collections
+COPY requirements.yml /etc/requirements.yml
+RUN ansible-galaxy collection install -r /etc/requirements.yml
+
 # OpenShift Tools
 COPY --from=unarchive /usr/local/bin/oc usr/local/bin/kubectl /usr/local/bin/openshift-install /usr/local/bin/
 
