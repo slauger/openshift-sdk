@@ -12,7 +12,7 @@ ARG HELMFILE_RELEASE=1.4.1
 # renovate: datasource=github-tags depName=vmware/govmomi
 ARG GOVC_RELEASE=0.53.0
 # renovate: datasource=github-tags depName=mikefarah/yq
-ARG YQ_RELEASE=4.52.4
+ARG YQ_RELEASE=4.52.5
 
 RUN dnf -y install unzip
 
