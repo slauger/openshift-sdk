@@ -1,9 +1,9 @@
 collections:
   - name: ansible.netcommon
     version: 8.4.0
-  - name: community.kubernetes
-    version: 2.0.1
   - name: community.hashi_vault
     version: 7.1.0
+  - name: kubernetes.core
+    version: 6.3.0
   - name: community.vmware
     version: 6.2.0

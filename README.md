@@ -10,7 +10,7 @@ All-in-one container image for OpenShift CI/CD pipelines. Based on Red Hat UBI 9
 |------|-------------|
 | `openshift-install` | OpenShift cluster installer |
 | `oc` / `kubectl` | OpenShift and Kubernetes CLI |
-| `ansible` | Automation engine with `community.kubernetes` and `community.vmware` collections |
+| `ansible` | Automation engine with `kubernetes.core`, `ansible.netcommon` and `community.vmware` collections |
 | `helm` | Kubernetes package manager |
 | `helmfile` | Declarative Helm chart management |
 | `vault` | HashiCorp Vault CLI |
