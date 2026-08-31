@@ -13,5 +13,7 @@ collections:
     version: 7.1.0
   - name: kubernetes.core
     version: 6.5.0
+  - name: kubevirt.core
+    version: 2.3.0
   - name: community.vmware
     version: 6.2.1
