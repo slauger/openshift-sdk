@@ -1,0 +1,46 @@
+name: Lint
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+# Supersede outdated runs on the same ref; a lint run is cheap but pointless
+# once a newer commit exists.
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.5.0
+        with:
+          dockerfile: Dockerfile
+          config: .hadolint.yaml
+
+      - name: Lint workflows
+        uses: docker://rhysd/actionlint:1.7.12
+
+      - name: Lint YAML
+        run: |
+          pipx install yamllint
+          yamllint -d '{extends: default, rules: {line-length: disable, document-start: disable, truthy: {check-keys: false}}}' \
+            requirements.yml tests/image.tests.yaml .hadolint.yaml .github/workflows/
+
+      - name: Validate renovate.json
+        run: python3 -m json.tool renovate.json > /dev/null
+
+      - name: Check discover_versions.py
+        run: python3 -m compileall -q scripts/discover_versions.py

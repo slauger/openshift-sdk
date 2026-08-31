@@ -8,7 +8,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/^Dockerfile$/"],
+      "managerFilePatterns": [
+        "/^Dockerfile$/"
+      ],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>[^\\s]+)\\s+depName=(?<depName>[^\\s]+)\\nARG\\s+\\w+=(?<currentValue>[^\\s]+)"
       ],
@@ -17,9 +19,21 @@
   ],
   "packageRules": [
     {
-      "matchManagers": ["custom.regex"],
-      "matchFileNames": ["Dockerfile"],
+      "description": "Automerge non-major updates across every manager once the PR build is green",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest",
+        "pin"
+      ],
       "automerge": true
+    },
+    {
+      "description": "Major updates stay manual - ansible 13->14 and community.general 12->13 both needed review",
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "automerge": false
     }
   ]
 }

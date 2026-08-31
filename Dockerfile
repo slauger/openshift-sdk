@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/ubi AS unarchive
+FROM registry.access.redhat.com/ubi9/ubi:9.8 AS unarchive
 
 ARG OPENSHIFT_RELEASE
 ENV OPENSHIFT_RELEASE=${OPENSHIFT_RELEASE}
@@ -14,7 +14,7 @@ ARG GOVC_RELEASE=0.56.0
 # renovate: datasource=github-tags depName=mikefarah/yq
 ARG YQ_RELEASE=4.53.6
 
-RUN dnf -y install unzip
+RUN dnf -y install unzip && dnf clean all
 
 COPY openshift-install-linux-${OPENSHIFT_RELEASE}.tar.gz .
 COPY openshift-client-linux-${OPENSHIFT_RELEASE}.tar.gz .
@@ -57,7 +57,7 @@ RUN curl -vfLO https://github.com/vmware/govmomi/releases/download/v${GOVC_RELEA
 RUN curl -vfLo /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v${YQ_RELEASE}/yq_linux_amd64 && \
     chmod +x /usr/local/bin/yq
 
-FROM registry.access.redhat.com/ubi9/ubi
+FROM registry.access.redhat.com/ubi9/ubi:9.8
 
 LABEL maintainer="simon@lauger.de"
 
