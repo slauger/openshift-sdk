@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/ubi:9.8 AS unarchive
+FROM registry.access.redhat.com/ubi9/ubi:9.8-1787634763 AS unarchive
 
 ARG OPENSHIFT_RELEASE
 ENV OPENSHIFT_RELEASE=${OPENSHIFT_RELEASE}
@@ -57,7 +57,7 @@ RUN curl -vfLO https://github.com/vmware/govmomi/releases/download/v${GOVC_RELEA
 RUN curl -vfLo /usr/local/bin/yq https://github.com/mikefarah/yq/releases/download/v${YQ_RELEASE}/yq_linux_amd64 && \
     chmod +x /usr/local/bin/yq
 
-FROM registry.access.redhat.com/ubi9/ubi:9.8
+FROM registry.access.redhat.com/ubi9/ubi:9.8-1787634763
 
 LABEL maintainer="simon@lauger.de"
 
