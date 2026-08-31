@@ -87,7 +87,10 @@ RUN curl -vfLO https://github.com/ahmetb/kubectx/releases/download/v${KUBECTX_RE
     tar vxzf kubectx_v${KUBECTX_RELEASE}_linux_x86_64.tar.gz kubectx && \
     tar vxzf kubens_v${KUBECTX_RELEASE}_linux_x86_64.tar.gz kubens && \
     mv kubectx kubens /usr/local/bin/ && \
-    rm kubectx_v${KUBECTX_RELEASE}_linux_x86_64.tar.gz kubens_v${KUBECTX_RELEASE}_linux_x86_64.tar.gz
+    rm kubectx_v${KUBECTX_RELEASE}_linux_x86_64.tar.gz kubens_v${KUBECTX_RELEASE}_linux_x86_64.tar.gz && \
+    mkdir /completions && \
+    curl -vfLo /completions/kubectx https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_RELEASE}/completion/kubectx.bash && \
+    curl -vfLo /completions/kubens https://raw.githubusercontent.com/ahmetb/kubectx/v${KUBECTX_RELEASE}/completion/kubens.bash
 
 # tkn Binary (OpenShift Pipelines)
 RUN curl -vfLO https://github.com/tektoncd/cli/releases/download/v${TKN_RELEASE}/tkn_${TKN_RELEASE}_Linux_x86_64.tar.gz && \
@@ -197,8 +200,21 @@ COPY --from=hypershift /usr/bin/hcp /usr/local/bin/hcp
 # External tools
 COPY --from=unarchive /usr/local/bin/helm /usr/local/bin/helmfile /usr/local/bin/vault /usr/local/bin/govc /usr/local/bin/yq /usr/local/bin/stern /usr/local/bin/kubectx /usr/local/bin/kubens /usr/local/bin/
 
-# oc ships kubectl as a byte identical copy, a symlink keeps the behaviour and saves the space
+# kubectx and kubens carry their completion in the repository, not in the binary
+COPY --from=unarchive /completions/ /etc/bash_completion.d/
+
+# oc ships kubectl as a byte identical copy, a symlink keeps the behaviour and saves the space.
+# Completions come from the binaries themselves, with four exceptions: oc-mirror insists on
+# --v2, stern and yq spell the subcommand differently, and vault expects the C mode that its
+# -autocomplete-install would wire into a dotfile. govc has no completion at all and the one
+# of kubectl-oadp blocks on a cluster connection, so both are left out.
 RUN ln -s oc /usr/local/bin/kubectl \
- && oc completion bash > /etc/bash_completion.d/oc \
+ && for tool in oc kubectl openshift-install helm helmfile tkn kn argocd velero virtctl roxctl hcp kubectl-mtv; do \
+        "$tool" completion bash > "/etc/bash_completion.d/$tool"; \
+    done \
+ && oc-mirror completion bash --v2 > /etc/bash_completion.d/oc-mirror \
+ && stern --completion bash > /etc/bash_completion.d/stern \
+ && yq shell-completion bash > /etc/bash_completion.d/yq \
+ && echo 'complete -C /usr/local/bin/vault vault' > /etc/bash_completion.d/vault \
  && mkdir /workspace
 WORKDIR /workspace
