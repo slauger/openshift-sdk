@@ -32,7 +32,7 @@ ARG VELERO_RELEASE=1.18.2
 # renovate: datasource=github-tags depName=migtools/oadp-cli
 ARG KUBECTL_OADP_RELEASE=0.3.3
 # renovate: datasource=github-tags depName=stackrox/stackrox
-ARG ROXCTL_RELEASE=4.11.3
+ARG ROXCTL_RELEASE=134
 
 RUN dnf -y install unzip && dnf clean all
 
