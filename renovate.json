@@ -3,10 +3,12 @@
   "extends": [
     "config:recommended"
   ],
+  "prConcurrentLimit": 20,
+  "prHourlyLimit": 0,
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
+      "managerFilePatterns": ["/^Dockerfile$/"],
       "matchStrings": [
         "#\\s*renovate:\\s*datasource=(?<datasource>[^\\s]+)\\s+depName=(?<depName>[^\\s]+)\\nARG\\s+\\w+=(?<currentValue>[^\\s]+)"
       ],

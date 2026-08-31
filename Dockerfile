@@ -4,15 +4,15 @@ ARG OPENSHIFT_RELEASE
 ENV OPENSHIFT_RELEASE=${OPENSHIFT_RELEASE}
 
 # renovate: datasource=github-tags depName=helm/helm
-ARG HELM_RELEASE=4.1.3
+ARG HELM_RELEASE=4.2.4
 # renovate: datasource=github-tags depName=hashicorp/vault
-ARG VAULT_RELEASE=1.21.4
+ARG VAULT_RELEASE=2.0.4
 # renovate: datasource=github-tags depName=helmfile/helmfile
-ARG HELMFILE_RELEASE=1.4.3
+ARG HELMFILE_RELEASE=1.7.4
 # renovate: datasource=github-tags depName=vmware/govmomi
-ARG GOVC_RELEASE=0.53.0
+ARG GOVC_RELEASE=0.56.0
 # renovate: datasource=github-tags depName=mikefarah/yq
-ARG YQ_RELEASE=4.52.5
+ARG YQ_RELEASE=4.53.6
 
 RUN dnf -y install unzip
 
@@ -69,13 +69,13 @@ RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/subscription-manager.c
  && yum makecache --timer \
  && yum -y install initscripts \
  && yum -y update \
- && yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
+ && yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
  && yum -y install \
       sudo \
       which \
       hostname \
-      python3.12 \
-      python3.12-pip \
+      python3.14 \
+      python3.14-pip \
       vim \
       git \
       wget \
@@ -94,7 +94,8 @@ RUN sed -i 's/enabled=1/enabled=0/' /etc/yum/pluginconf.d/subscription-manager.c
 
 # Python Dependencies
 COPY requirements.txt /etc/requirements.txt
-RUN pip3.12 install --no-cache-dir -r /etc/requirements.txt
+RUN pip3.14 install --no-cache-dir --upgrade pip setuptools wheel \
+ && pip3.14 install --no-cache-dir -r /etc/requirements.txt
 
 # Ansible Collections
 COPY requirements.yml /etc/requirements.yml
