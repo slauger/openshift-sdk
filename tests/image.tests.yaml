@@ -74,3 +74,18 @@ commandTests:
   - name: "oc bash completion is registered"
     command: "bash"
     args: ["-c", "source /etc/bash_completion.d/oc && complete -p oc"]
+  - name: "kubectl bash completion is registered"
+    command: "bash"
+    args: ["-c", "source /etc/bash_completion.d/kubectl && complete -p kubectl"]
+  - name: "virtctl bash completion is registered"
+    command: "bash"
+    args: ["-c", "source /etc/bash_completion.d/virtctl && complete -p virtctl"]
+  - name: "vault bash completion is registered"
+    command: "bash"
+    args: ["-c", "source /etc/bash_completion.d/vault && complete -p vault"]
+  - name: "kubectx bash completion is registered"
+    command: "bash"
+    args: ["-c", "source /etc/bash_completion.d/kubectx && complete -p kubectx"]
+  - name: "every completion loads in an interactive shell"
+    command: "bash"
+    args: ["-ic", "for t in oc kubectl openshift-install helm helmfile tkn kn argocd velero virtctl roxctl hcp kubectl-mtv oc-mirror stern yq vault kubectx kubens; do complete -p $t > /dev/null || { echo missing completion: $t; exit 1; }; done"]

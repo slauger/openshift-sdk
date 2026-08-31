@@ -42,7 +42,7 @@ podman run -it quay.io/slauger/openshift-sdk:4.21.3
 
 The image tag corresponds to the OpenShift release version.
 
-Bash completion for `oc` is preinstalled in `/etc/bash_completion.d/oc`.
+Bash completion is preinstalled in `/etc/bash_completion.d/` for every tool that ships one, `oc` and `kubectl` included. It loads automatically in interactive shells.
 
 ## 🔄 Automated Builds
 
