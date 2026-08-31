@@ -2,4 +2,6 @@ ignored:
   - DL3045
   - DL3013
   - DL3003
+  # Pinning RPM versions would defeat the point of rebuilding for CVE fixes.
   - DL3033
+  - DL3041
