@@ -19,6 +19,13 @@
   ],
   "packageRules": [
     {
+      "description": "knative/client tags are prefixed with knative-v, strip it so the ARG stays a plain version",
+      "matchDepNames": [
+        "knative/client"
+      ],
+      "extractVersion": "^knative-v(?<version>.+)$"
+    },
+    {
       "description": "Automerge non-major updates across every manager once the PR build is green",
       "matchUpdateTypes": [
         "minor",

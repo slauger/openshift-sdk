@@ -32,3 +32,45 @@ commandTests:
   - name: "yq exists"
     command: "yq"
     args: ["--version"]
+  - name: "stern exists"
+    command: "stern"
+    args: ["--version"]
+  - name: "kubectx exists"
+    command: "kubectx"
+    args: ["--version"]
+  - name: "kubens exists"
+    command: "kubens"
+    args: ["--version"]
+  - name: "tkn exists"
+    command: "tkn"
+    args: ["version"]
+  - name: "kn exists"
+    command: "kn"
+    args: ["version"]
+  - name: "argocd exists"
+    command: "argocd"
+    args: ["version", "--client"]
+  - name: "virtctl exists"
+    command: "virtctl"
+    args: ["version", "--client"]
+  - name: "kubectl-mtv exists"
+    command: "kubectl-mtv"
+    args: ["version"]
+  - name: "velero exists"
+    command: "velero"
+    args: ["version", "--client-only"]
+  - name: "kubectl-oadp exists"
+    command: "kubectl-oadp"
+    args: ["version", "--client-only"]
+  - name: "roxctl exists"
+    command: "roxctl"
+    args: ["version"]
+  - name: "hcp exists"
+    command: "hcp"
+    args: ["version", "--client-only"]
+  - name: "oc-mirror exists"
+    command: "oc-mirror"
+    args: ["--v2", "--version"]
+  - name: "oc bash completion is registered"
+    command: "bash"
+    args: ["-c", "source /etc/bash_completion.d/oc && complete -p oc"]
