@@ -26,7 +26,7 @@ ARG ARGOCD_RELEASE=3.5.2
 # renovate: datasource=github-tags depName=kubevirt/kubevirt
 ARG KUBEVIRT_RELEASE=1.9.0
 # renovate: datasource=github-tags depName=yaacov/kubectl-mtv
-ARG KUBECTL_MTV_RELEASE=0.3.31
+ARG KUBECTL_MTV_RELEASE=0.3.32
 # renovate: datasource=github-tags depName=velero-io/velero
 ARG VELERO_RELEASE=1.18.2
 # renovate: datasource=github-tags depName=migtools/oadp-cli
