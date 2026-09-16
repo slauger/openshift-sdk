@@ -12,7 +12,7 @@ collections:
   - name: community.hashi_vault
     version: 7.1.0
   - name: kubernetes.core
-    version: 6.5.0
+    version: 6.6.0
   - name: kubevirt.core
     version: 2.3.0
   - name: community.vmware
