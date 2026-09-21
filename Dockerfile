@@ -28,7 +28,7 @@ ARG KUBEVIRT_RELEASE=1.9.0
 # renovate: datasource=github-tags depName=yaacov/kubectl-mtv
 ARG KUBECTL_MTV_RELEASE=0.3.32
 # renovate: datasource=github-tags depName=velero-io/velero
-ARG VELERO_RELEASE=1.18.2
+ARG VELERO_RELEASE=1.18.3
 # renovate: datasource=github-tags depName=migtools/oadp-cli
 ARG KUBECTL_OADP_RELEASE=0.3.3
 # renovate: datasource=github-releases depName=stackrox/stackrox
