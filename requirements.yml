@@ -16,4 +16,4 @@ collections:
   - name: kubevirt.core
     version: 2.3.0
   - name: community.vmware
-    version: 6.4.0
+    version: 6.5.0
