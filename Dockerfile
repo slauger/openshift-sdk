@@ -12,7 +12,7 @@ ARG HELMFILE_RELEASE=1.8.0
 # renovate: datasource=github-tags depName=vmware/govmomi
 ARG GOVC_RELEASE=0.56.0
 # renovate: datasource=github-tags depName=mikefarah/yq
-ARG YQ_RELEASE=4.53.6
+ARG YQ_RELEASE=4.54.1
 # renovate: datasource=github-tags depName=stern/stern
 ARG STERN_RELEASE=1.34.0
 # renovate: datasource=github-tags depName=ahmetb/kubectx
