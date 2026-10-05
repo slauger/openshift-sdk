@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi9/ubi:9.8-1790665138 AS unarchive
+FROM registry.access.redhat.com/ubi9/ubi:9.8-1791179325 AS unarchive
 
 ARG OPENSHIFT_RELEASE
 ENV OPENSHIFT_RELEASE=${OPENSHIFT_RELEASE}
@@ -143,7 +143,7 @@ RUN { curl -vfLO https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/oc
 # hcp is only published inside the HyperShift operator image, so we lift it out of there
 FROM quay.io/hypershift/hypershift-operator@sha256:c95ef7749f63c1faed7219771a39d9eb569cb18fbb72fc0ae88d70342bb390d8 AS hypershift
 
-FROM registry.access.redhat.com/ubi9/ubi:9.8-1790665138
+FROM registry.access.redhat.com/ubi9/ubi:9.8-1791179325
 
 LABEL maintainer="simon@lauger.de"
 
