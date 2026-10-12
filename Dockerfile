@@ -24,7 +24,7 @@ ARG KN_RELEASE=1.23.0
 # renovate: datasource=github-tags depName=argoproj/argo-cd
 ARG ARGOCD_RELEASE=3.5.5
 # renovate: datasource=github-tags depName=kubevirt/kubevirt
-ARG KUBEVIRT_RELEASE=1.9.0
+ARG KUBEVIRT_RELEASE=1.9.1
 # renovate: datasource=github-tags depName=yaacov/kubectl-mtv
 ARG KUBECTL_MTV_RELEASE=0.3.32
 # renovate: datasource=github-tags depName=velero-io/velero
