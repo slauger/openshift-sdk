@@ -18,7 +18,7 @@ ARG STERN_RELEASE=1.35.0
 # renovate: datasource=github-tags depName=ahmetb/kubectx
 ARG KUBECTX_RELEASE=0.11.0
 # renovate: datasource=github-tags depName=tektoncd/cli
-ARG TKN_RELEASE=0.46.1
+ARG TKN_RELEASE=0.46.2
 # renovate: datasource=github-tags depName=knative/client
 ARG KN_RELEASE=1.23.0
 # renovate: datasource=github-tags depName=argoproj/argo-cd
