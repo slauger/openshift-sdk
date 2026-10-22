@@ -14,7 +14,7 @@ ARG GOVC_RELEASE=0.56.0
 # renovate: datasource=github-tags depName=mikefarah/yq
 ARG YQ_RELEASE=4.54.1
 # renovate: datasource=github-tags depName=stern/stern
-ARG STERN_RELEASE=1.34.0
+ARG STERN_RELEASE=1.35.0
 # renovate: datasource=github-tags depName=ahmetb/kubectx
 ARG KUBECTX_RELEASE=0.11.0
 # renovate: datasource=github-tags depName=tektoncd/cli
