@@ -10,7 +10,7 @@ ARG VAULT_RELEASE=2.2.1
 # renovate: datasource=github-tags depName=helmfile/helmfile
 ARG HELMFILE_RELEASE=1.8.2
 # renovate: datasource=github-tags depName=vmware/govmomi
-ARG GOVC_RELEASE=0.56.1
+ARG GOVC_RELEASE=0.56.2
 # renovate: datasource=github-tags depName=mikefarah/yq
 ARG YQ_RELEASE=4.54.1
 # renovate: datasource=github-tags depName=stern/stern
