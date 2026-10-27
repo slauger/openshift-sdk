@@ -1,9 +1,7 @@
 name: Build (Docker) with matrix
 
+# Pushes to master are built by release.yaml, together with semantic-release.
 on:
-  push:
-    branches:
-      - master
   schedule:
     # Runs daily at 01:00 UTC (~ 03:00 Europe/Berlin during DST)
     - cron: '0 1 * * *'

@@ -1,6 +1,10 @@
 name: Release
 
+# Every push to master runs semantic-release and builds the images;
+# workflow_dispatch re-runs it by hand. The daily build stays in build.yml.
 on:
+  push:
+    branches: [master]
   workflow_dispatch:
 
 # Same group as build.yml: the release builds and pushes the same tags as the
@@ -48,12 +52,12 @@ jobs:
             semantic-release
 
   # Images are tagged with the OpenShift release, not the repository version.
-  # The release rebuilds them, so the SBOMs attached to it describe images
-  # that were built from the released commit. The build has to run in this
-  # workflow: a release created with GITHUB_TOKEN triggers no other workflow.
+  # They are built on every push, released or not, so the SBOMs attached to a
+  # release describe images built from the released commit. The build has to
+  # run in this workflow: a release created with GITHUB_TOKEN triggers no
+  # other workflow.
   build:
     needs: semantic-release
-    if: needs.semantic-release.outputs.version != ''
     uses: ./.github/workflows/_build.yaml
     permissions:
       contents: read

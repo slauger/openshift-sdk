@@ -80,7 +80,7 @@ Each build also keeps the SBOMs as a workflow artifact (`sbom-openshift-sdk-<ope
 
 ## 🏷️ Releases
 
-Releases are cut manually with [semantic-release](https://github.com/semantic-release/semantic-release) by running the `Release` workflow on `master`. The repository version is independent of the image tags, which stay OpenShift releases. A release run rebuilds, signs and attests the images of all supported OpenShift versions from the released commit and attaches their SBOMs to the [GitHub release](https://github.com/slauger/openshift-sdk/releases), one file per OpenShift release and format:
+Every push to `master` runs the `Release` workflow: [semantic-release](https://github.com/semantic-release/semantic-release) cuts a release if the push contains `feat`/`fix` commits, and the images are built either way. The repository version is independent of the image tags, which stay OpenShift releases. A release run builds, signs and attests the images of all supported OpenShift versions from the released commit and attaches their SBOMs to the [GitHub release](https://github.com/slauger/openshift-sdk/releases), one file per OpenShift release and format:
 
 ```text
 openshift-sdk-<openshift-release>-linux-amd64.cdx.json    # CycloneDX
