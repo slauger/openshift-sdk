@@ -1,0 +1,86 @@
+name: Release
+
+# Every push to master runs semantic-release and builds the images;
+# workflow_dispatch re-runs it by hand. The daily build stays in build.yml.
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Same group as build.yml: the release builds and pushes the same tags as the
+# daily build, so the two must not run at the same time.
+concurrency:
+  group: build-image
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  semantic-release:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    outputs:
+      version: ${{ steps.semantic.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      # No v0.0.0 baseline tag on purpose: without any tag semantic-release
+      # starts at 1.0.0, a baseline would make the first release 0.1.0.
+      - name: Run semantic-release
+        id: semantic
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx -p semantic-release@24 \
+            -p @semantic-release/commit-analyzer \
+            -p @semantic-release/release-notes-generator \
+            -p @semantic-release/exec \
+            -p @semantic-release/github \
+            semantic-release
+
+  # Images are tagged with the OpenShift release, not the repository version.
+  # They are built on every push, released or not, so the SBOMs attached to a
+  # release describe images built from the released commit. The build has to
+  # run in this workflow: a release created with GITHUB_TOKEN triggers no
+  # other workflow.
+  build:
+    needs: semantic-release
+    uses: ./.github/workflows/_build.yaml
+    permissions:
+      contents: read
+      id-token: write
+    secrets: inherit
+
+  release-assets:
+    needs: [semantic-release, build]
+    if: needs.semantic-release.outputs.version != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download SBOM artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: sbom-openshift-sdk-*
+          path: sbom
+          merge-multiple: true
+
+      - name: Upload assets to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ needs.semantic-release.outputs.version }}
+        run: gh release upload "v${VERSION}" sbom/*.json --clobber
