@@ -48,12 +48,35 @@ jobs:
             semantic-release
 
   # Images are tagged with the OpenShift release, not the repository version.
-  # The release rebuilds them from the released commit. The build has to run
-  # in this workflow: a release created with GITHUB_TOKEN triggers no other
-  # workflow.
+  # The release rebuilds them, so the SBOMs attached to it describe images
+  # that were built from the released commit. The build has to run in this
+  # workflow: a release created with GITHUB_TOKEN triggers no other workflow.
   build:
     needs: semantic-release
     if: needs.semantic-release.outputs.version != ''
     uses: ./.github/workflows/_build.yaml
+    permissions:
+      contents: read
+      id-token: write
     secrets: inherit
 
+  release-assets:
+    needs: [semantic-release, build]
+    if: needs.semantic-release.outputs.version != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download SBOM artifacts
+        uses: actions/download-artifact@v8
+        with:
+          pattern: sbom-openshift-sdk-*
+          path: sbom
+          merge-multiple: true
+
+      - name: Upload assets to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VERSION: ${{ needs.semantic-release.outputs.version }}
+        run: gh release upload "v${VERSION}" sbom/*.json --clobber

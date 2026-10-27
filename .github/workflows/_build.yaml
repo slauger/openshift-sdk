@@ -1,7 +1,8 @@
 name: Build
 
 # Shared by build.yml (push to master, daily schedule) and release.yaml
-# (manual release), so that a release builds its images in the same run.
+# (manual release), so that a release attaches the SBOMs of the images it
+# built in the same run.
 on:
   workflow_call:
 
@@ -28,6 +29,11 @@ jobs:
     name: Build & Push (${{ matrix.release_channel }})
     needs: discover-versions
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Keyless cosign signing exchanges this OIDC token for a Fulcio
+      # certificate, so no private key has to be managed.
+      id-token: write
 
     strategy:
       fail-fast: false
@@ -74,3 +80,70 @@ jobs:
 
       - name: Push
         run: make push
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v4.1.2
+
+      - name: Install crane
+        uses: imjasonh/setup-crane@v0.7
+
+      - name: Install syft
+        uses: anchore/sbom-action/download-syft@v0.24.3
+
+      # docker push records the manifest digest in RepoDigests. The image is
+      # single-arch and pushed as a plain manifest, so the linux/amd64 digest
+      # is the same one; crane only makes a difference if the push ever turns
+      # into an index (containerd image store, BuildKit attestations).
+      - name: Resolve image digest
+        id: digest
+        run: |
+          IMAGE_REF=$(make -s print_image)
+          IMAGE="${IMAGE_REF%:*}"
+          PUSHED=$(docker inspect --format '{{range .RepoDigests}}{{println .}}{{end}}' "${IMAGE_REF}" \
+            | grep -m1 "^${IMAGE}@" | cut -d@ -f2 || true)
+          if [ -z "${PUSHED}" ]; then
+            echo "::error::could not determine the pushed digest of ${IMAGE_REF}"
+            exit 1
+          fi
+          DIGEST=$(crane digest --platform linux/amd64 "${IMAGE}@${PUSHED}")
+          if [ -z "${DIGEST}" ]; then
+            echo "::error::no linux/amd64 image in ${IMAGE}@${PUSHED}"
+            exit 1
+          fi
+          {
+            echo "image=${IMAGE}"
+            echo "pushed=${PUSHED}"
+            echo "digest=${DIGEST}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Sign image with cosign (keyless)
+        run: cosign sign --yes "${{ steps.digest.outputs.image }}@${{ steps.digest.outputs.pushed }}"
+
+      - name: Generate SBOMs
+        env:
+          # Packages only: without this, every file owned by an RPM becomes a CycloneDX component
+          SYFT_FILE_METADATA_SELECTION: none
+          IMAGE: ${{ steps.digest.outputs.image }}
+          DIGEST: ${{ steps.digest.outputs.digest }}
+        run: |
+          mkdir -p sbom
+          BASE="sbom/openshift-sdk-${OPENSHIFT_RELEASE}-linux-amd64"
+          syft scan "registry:${IMAGE}@${DIGEST}" \
+            --source-name "${IMAGE}" --source-version "${OPENSHIFT_RELEASE}" \
+            -o "cyclonedx-json=${BASE}.cdx.json" \
+            -o "spdx-json=${BASE}.spdx.json"
+
+      # An SBOM describes one platform image, so it is attested against the
+      # platform digest. cosign verify-attestation has no --platform flag.
+      - name: Attest CycloneDX SBOM with cosign (keyless)
+        run: |
+          cosign attest --yes --type cyclonedx \
+            --predicate "sbom/openshift-sdk-${OPENSHIFT_RELEASE}-linux-amd64.cdx.json" \
+            "${{ steps.digest.outputs.image }}@${{ steps.digest.outputs.digest }}"
+
+      - name: Upload SBOMs
+        uses: actions/upload-artifact@v7
+        with:
+          name: sbom-openshift-sdk-${{ matrix.openshift_release }}
+          path: sbom/*.json
+          retention-days: 7

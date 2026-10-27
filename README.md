@@ -50,9 +50,42 @@ The CI pipeline automatically discovers the latest 3 supported OpenShift version
 
 Builds run daily and on every push to `master`.
 
+## 🔐 Supply Chain Security
+
+Every pushed image is:
+
+- **Signed** with [cosign](https://docs.sigstore.dev/cosign/) keyless signing (Sigstore OIDC), so there are no private keys to manage or rotate
+- **Accompanied by SBOMs**: a CycloneDX and an SPDX SBOM created with [syft](https://github.com/anchore/syft), the CycloneDX one attached as a signed cosign attestation, e.g. for [Dependency-Track](https://dependencytrack.org/)
+
+The daily builds replace the image behind a tag, so signatures and attestations are bound to the image digest rather than the tag. Resolve the digest first, then verify the signature:
+
+```bash
+DIGEST=$(crane digest --platform linux/amd64 quay.io/slauger/openshift-sdk:4.21.3)
+cosign verify "quay.io/slauger/openshift-sdk@${DIGEST}" \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  --certificate-identity-regexp 'github\.com/slauger/openshift-sdk'
+```
+
+An SBOM describes a single architecture, so the CycloneDX attestation is attached to the `linux/amd64` platform digest. `cosign verify-attestation` has no `--platform` flag, which is why the digest is resolved with `crane digest --platform`:
+
+```bash
+cosign verify-attestation "quay.io/slauger/openshift-sdk@${DIGEST}" \
+  --type cyclonedx \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  --certificate-identity-regexp 'github\.com/slauger/openshift-sdk' \
+  | jq -r '.payload' | base64 -d | jq '.predicate' > sbom.cdx.json
+```
+
+Each build also keeps the SBOMs as a workflow artifact (`sbom-openshift-sdk-<openshift-release>`) for 7 days.
+
 ## 🏷️ Releases
 
-Releases are cut manually with [semantic-release](https://github.com/semantic-release/semantic-release) by running the `Release` workflow on `master`. The repository version is independent of the image tags, which stay OpenShift releases. A release run rebuilds the images of all supported OpenShift versions from the released commit.
+Releases are cut manually with [semantic-release](https://github.com/semantic-release/semantic-release) by running the `Release` workflow on `master`. The repository version is independent of the image tags, which stay OpenShift releases. A release run rebuilds, signs and attests the images of all supported OpenShift versions from the released commit and attaches their SBOMs to the [GitHub release](https://github.com/slauger/openshift-sdk/releases), one file per OpenShift release and format:
+
+```text
+openshift-sdk-<openshift-release>-linux-amd64.cdx.json    # CycloneDX
+openshift-sdk-<openshift-release>-linux-amd64.spdx.json   # SPDX
+```
 
 ## 🏗️ Local Build
 

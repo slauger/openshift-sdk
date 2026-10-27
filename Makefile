@@ -78,6 +78,10 @@ test:
 push:
 	docker push $(CONTAINER_NAME):$(CONTAINER_TAG)
 
+.PHONY: print_image
+print_image:
+	@echo $(CONTAINER_NAME):$(CONTAINER_TAG)
+
 .PHONY: run
 run:
 	docker run -it --hostname openshift-sdk --mount type=bind,source="$(shell pwd)",target=/workspace --mount type=bind,source="$(HOME)/.ssh,target=/root/.ssh" $(CONTAINER_NAME):$(CONTAINER_TAG) /bin/bash
