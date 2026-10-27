@@ -50,6 +50,10 @@ The CI pipeline automatically discovers the latest 3 supported OpenShift version
 
 Builds run daily and on every push to `master`.
 
+## 🏷️ Releases
+
+Releases are cut manually with [semantic-release](https://github.com/semantic-release/semantic-release) by running the `Release` workflow on `master`. The repository version is independent of the image tags, which stay OpenShift releases. A release run rebuilds the images of all supported OpenShift versions from the released commit.
+
 ## 🏗️ Local Build
 
 ### OCP
