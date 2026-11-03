@@ -22,7 +22,7 @@ ARG TKN_RELEASE=0.46.2
 # renovate: datasource=github-tags depName=knative/client
 ARG KN_RELEASE=1.24.0
 # renovate: datasource=github-tags depName=argoproj/argo-cd
-ARG ARGOCD_RELEASE=3.5.7
+ARG ARGOCD_RELEASE=3.6.0
 # renovate: datasource=github-tags depName=kubevirt/kubevirt
 ARG KUBEVIRT_RELEASE=1.9.1
 # renovate: datasource=github-tags depName=yaacov/kubectl-mtv
