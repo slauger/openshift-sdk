@@ -8,7 +8,7 @@ ARG HELM_RELEASE=4.3.1
 # renovate: datasource=github-tags depName=hashicorp/vault
 ARG VAULT_RELEASE=2.2.2
 # renovate: datasource=github-tags depName=helmfile/helmfile
-ARG HELMFILE_RELEASE=1.8.3
+ARG HELMFILE_RELEASE=1.8.4
 # renovate: datasource=github-tags depName=vmware/govmomi
 ARG GOVC_RELEASE=0.56.2
 # renovate: datasource=github-tags depName=mikefarah/yq
