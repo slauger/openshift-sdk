@@ -141,7 +141,7 @@ RUN { curl -vfLO https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/oc
     rm oc-mirror.rhel9.tar.gz
 
 # hcp is only published inside the HyperShift operator image, so we lift it out of there
-FROM quay.io/hypershift/hypershift-operator@sha256:04be4b31eac7cb99473a98c7ad517bcc83346d3ea262d6c7e91d53e8285fa4dd AS hypershift
+FROM quay.io/hypershift/hypershift-operator@sha256:5edd911a7673fdccad0718f94aa28e9adacd87459ac7806ea7573fa284af348e AS hypershift
 
 FROM registry.access.redhat.com/ubi9/ubi:9.9-1795197514
 
