@@ -88,7 +88,7 @@ jobs:
         uses: imjasonh/setup-crane@v0.7
 
       - name: Install syft
-        uses: anchore/sbom-action/download-syft@v0.24.3
+        uses: anchore/sbom-action/download-syft@v0.24.4
 
       # docker push records the manifest digest in RepoDigests. The image is
       # single-arch and pushed as a plain manifest, so the linux/amd64 digest
