@@ -28,13 +28,13 @@ All-in-one container image for OpenShift CI/CD pipelines. Based on Red Hat UBI 9
 ## 🚀 Quick Start
 
 ```bash
-docker run -it quay.io/slauger/openshift-sdk:4.21.3
+docker run -it quay.io/slauger/openshift-sdk:4.22.22
 ```
 
 Or with Podman:
 
 ```bash
-podman run -it quay.io/slauger/openshift-sdk:4.21.3
+podman run -it quay.io/slauger/openshift-sdk:4.22.22
 ```
 
 The image tag corresponds to the OpenShift release version.
@@ -57,7 +57,7 @@ Every pushed image is:
 The daily builds replace the image behind a tag, so signatures and attestations are bound to the image digest rather than the tag. Resolve the digest first, then verify the signature:
 
 ```bash
-DIGEST=$(crane digest --platform linux/amd64 quay.io/slauger/openshift-sdk:4.21.3)
+DIGEST=$(crane digest --platform linux/amd64 quay.io/slauger/openshift-sdk:4.22.22)
 cosign verify "quay.io/slauger/openshift-sdk@${DIGEST}" \
   --certificate-oidc-issuer https://token.actions.githubusercontent.com \
   --certificate-identity-regexp 'github\.com/slauger/openshift-sdk'
@@ -90,7 +90,7 @@ openshift-sdk-<openshift-release>-linux-amd64.spdx.json   # SPDX
 
 ```bash
 export DEPLOYMENT_TYPE=ocp
-export RELEASE_CHANNEL=stable-4.21
+export RELEASE_CHANNEL=stable-4.22
 export OPENSHIFT_RELEASE=$(make print_version)
 make fetch
 make build
@@ -123,7 +123,7 @@ python3 scripts/discover_versions.py
 ```
 
 ```json
-{"include": [{"release_channel": "stable-4.21", "openshift_release": "4.21.3"}, ...]}
+{"include": [{"release_channel": "stable-4.22", "openshift_release": "4.22.22"}, ...]}
 ```
 
 ## 📄 License
