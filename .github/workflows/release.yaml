@@ -44,7 +44,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npx -p semantic-release@24 \
+          npx -p semantic-release@26 \
             -p @semantic-release/commit-analyzer \
             -p @semantic-release/release-notes-generator \
             -p @semantic-release/exec \
