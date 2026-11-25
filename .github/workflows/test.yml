@@ -1,0 +1,44 @@
+name: Test
+
+# Builds the image for the newest supported OpenShift release and runs the
+# container-structure-test suite, without pushing. Renovate automerges
+# non-major updates only once this check is green, so a broken download URL
+# or a vanished base image digest fails here instead of on master.
+on:
+  pull_request:
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    env:
+      DEPLOYMENT_TYPE: ocp
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Discover newest stable channel
+        run: |
+          channel=$(python3 scripts/discover_versions.py | jq -c '.include[0]')
+          {
+            echo "RELEASE_CHANNEL=$(jq -r .release_channel <<< "${channel}")"
+            echo "OPENSHIFT_RELEASE=$(jq -r .openshift_release <<< "${channel}")"
+          } >> "$GITHUB_ENV"
+
+      - name: Fetch
+        run: make fetch
+
+      - name: Build
+        run: make build
+
+      - name: Test
+        run: make test
