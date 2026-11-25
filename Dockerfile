@@ -140,8 +140,12 @@ RUN { curl -vfLO https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/oc
     chmod 0755 /usr/local/bin/oc-mirror && \
     rm oc-mirror.rhel9.tar.gz
 
-# hcp is only published inside the HyperShift operator image, so we lift it out of there
-FROM quay.io/hypershift/hypershift-operator@sha256:12504e683c0b967eda9292084a9e3ac7516ab5863b41fd31c33c9c7cf4e2f0b3 AS hypershift
+# hcp is only published inside the HyperShift operator image, so we lift it out of there.
+# The repository has no version tags, only a moving latest, and Quay garbage-collects the
+# replaced manifests after 24 hours. A digest pin breaks the build as soon as Renovate falls
+# behind for a day, so the tag is used on purpose (the daily build picks up the newest hcp).
+# hadolint ignore=DL3007
+FROM quay.io/hypershift/hypershift-operator:latest AS hypershift
 
 FROM registry.access.redhat.com/ubi9/ubi:9.9-1795197514
 
