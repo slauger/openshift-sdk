@@ -1,10 +1,17 @@
 name: Build
 
-# Shared by build.yml (push to master, daily schedule) and release.yaml
-# (manual release), so that a release attaches the SBOMs of the images it
-# built in the same run.
+# Shared by build.yml (daily schedule) and release.yaml (push to master), so
+# that a release attaches the SBOMs of the images it built in the same run.
+# Pull requests build and test without pushing in test.yml.
 on:
   workflow_call:
+    secrets:
+      REGISTRY_HOST:
+        required: true
+      REGISTRY_USER:
+        required: true
+      REGISTRY_PASSWORD:
+        required: true
 
 permissions:
   contents: read
