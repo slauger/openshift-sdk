@@ -140,9 +140,6 @@ RUN { curl -vfLO https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/oc
     chmod 0755 /usr/local/bin/oc-mirror && \
     rm oc-mirror.rhel9.tar.gz
 
-# hcp is only published inside the HyperShift operator image, so we lift it out of there
-FROM quay.io/hypershift/hypershift-operator@sha256:be764b12aa24b692f5a533f6badc361a9b7977ed57bccd44c10a7f5806496714 AS hypershift
-
 FROM registry.access.redhat.com/ubi9/ubi:9.9-1795197514
 
 LABEL maintainer="simon@lauger.de"
@@ -195,7 +192,6 @@ COPY --from=unarchive /usr/local/bin/oc /usr/local/bin/openshift-install /usr/lo
 # OpenShift Operator CLIs
 COPY --from=unarchive /usr/local/bin/tkn /usr/local/bin/kn /usr/local/bin/argocd /usr/local/bin/roxctl /usr/local/bin/
 COPY --from=unarchive /usr/local/bin/virtctl /usr/local/bin/kubectl-mtv /usr/local/bin/velero /usr/local/bin/kubectl-oadp /usr/local/bin/
-COPY --from=hypershift /usr/bin/hcp /usr/local/bin/hcp
 
 # External tools
 COPY --from=unarchive /usr/local/bin/helm /usr/local/bin/helmfile /usr/local/bin/vault /usr/local/bin/govc /usr/local/bin/yq /usr/local/bin/stern /usr/local/bin/kubectx /usr/local/bin/kubens /usr/local/bin/
@@ -209,7 +205,7 @@ COPY --from=unarchive /completions/ /etc/bash_completion.d/
 # -autocomplete-install would wire into a dotfile. govc has no completion at all and the one
 # of kubectl-oadp blocks on a cluster connection, so both are left out.
 RUN ln -s oc /usr/local/bin/kubectl \
- && for tool in oc kubectl openshift-install helm helmfile tkn kn argocd velero virtctl roxctl hcp kubectl-mtv; do \
+ && for tool in oc kubectl openshift-install helm helmfile tkn kn argocd velero virtctl roxctl kubectl-mtv; do \
         "$tool" completion bash > "/etc/bash_completion.d/$tool"; \
     done \
  && oc-mirror completion bash --v2 > /etc/bash_completion.d/oc-mirror \
