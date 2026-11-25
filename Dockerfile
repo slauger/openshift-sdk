@@ -25,14 +25,8 @@ ARG KN_RELEASE=1.24.0
 ARG ARGOCD_RELEASE=3.6.3
 # renovate: datasource=github-tags depName=kubevirt/kubevirt
 ARG KUBEVIRT_RELEASE=1.10.0
-# renovate: datasource=github-tags depName=yaacov/kubectl-mtv
-ARG KUBECTL_MTV_RELEASE=0.3.36
-# renovate: datasource=github-tags depName=velero-io/velero
-ARG VELERO_RELEASE=1.19.0
 # renovate: datasource=github-tags depName=migtools/oadp-cli
 ARG KUBECTL_OADP_RELEASE=0.3.3
-# renovate: datasource=github-releases depName=stackrox/stackrox
-ARG ROXCTL_RELEASE=4.11.7
 
 RUN dnf -y install unzip && dnf clean all
 
@@ -110,27 +104,11 @@ RUN curl -vfLo /usr/local/bin/argocd https://github.com/argoproj/argo-cd/release
 RUN curl -vfLo /usr/local/bin/virtctl https://github.com/kubevirt/kubevirt/releases/download/v${KUBEVIRT_RELEASE}/virtctl-v${KUBEVIRT_RELEASE}-linux-amd64 && \
     chmod +x /usr/local/bin/virtctl
 
-# kubectl-mtv Binary (Migration Toolkit for Virtualization)
-RUN curl -vfLO https://github.com/yaacov/kubectl-mtv/releases/download/v${KUBECTL_MTV_RELEASE}/kubectl-mtv-v${KUBECTL_MTV_RELEASE}-linux-amd64.tar.gz && \
-    tar vxzf kubectl-mtv-v${KUBECTL_MTV_RELEASE}-linux-amd64.tar.gz kubectl-mtv-linux-amd64 && \
-    mv kubectl-mtv-linux-amd64 /usr/local/bin/kubectl-mtv && \
-    rm kubectl-mtv-v${KUBECTL_MTV_RELEASE}-linux-amd64.tar.gz
-
-# velero Binary (OADP)
-RUN curl -vfLO https://github.com/velero-io/velero/releases/download/v${VELERO_RELEASE}/velero-v${VELERO_RELEASE}-linux-amd64.tar.gz && \
-    tar vxzf velero-v${VELERO_RELEASE}-linux-amd64.tar.gz velero-v${VELERO_RELEASE}-linux-amd64/velero && \
-    mv velero-v${VELERO_RELEASE}-linux-amd64/velero /usr/local/bin/velero && \
-    rm -r velero-v${VELERO_RELEASE}-linux-amd64.tar.gz velero-v${VELERO_RELEASE}-linux-amd64
-
 # kubectl-oadp Binary (OADP)
 RUN curl -vfLO https://github.com/migtools/oadp-cli/releases/download/v${KUBECTL_OADP_RELEASE}/kubectl-oadp_v${KUBECTL_OADP_RELEASE}_linux_amd64.tar.gz && \
     tar vxzf kubectl-oadp_v${KUBECTL_OADP_RELEASE}_linux_amd64.tar.gz kubectl-oadp && \
     mv kubectl-oadp /usr/local/bin/kubectl-oadp && \
     rm kubectl-oadp_v${KUBECTL_OADP_RELEASE}_linux_amd64.tar.gz
-
-# roxctl Binary (Advanced Cluster Security)
-RUN curl -vfLo /usr/local/bin/roxctl https://mirror.openshift.com/pub/rhacs/assets/${ROXCTL_RELEASE}/bin/Linux/roxctl && \
-    chmod +x /usr/local/bin/roxctl
 
 # oc-mirror Binary, version matched to the release, stable channel as fallback for OKD
 RUN { curl -vfLO https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/${OPENSHIFT_RELEASE}/oc-mirror.rhel9.tar.gz || \
@@ -139,9 +117,6 @@ RUN { curl -vfLO https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/oc
     mv oc-mirror /usr/local/bin/oc-mirror && \
     chmod 0755 /usr/local/bin/oc-mirror && \
     rm oc-mirror.rhel9.tar.gz
-
-# hcp is only published inside the HyperShift operator image, so we lift it out of there
-FROM quay.io/hypershift/hypershift-operator@sha256:be764b12aa24b692f5a533f6badc361a9b7977ed57bccd44c10a7f5806496714 AS hypershift
 
 FROM registry.access.redhat.com/ubi9/ubi:9.9-1795197514
 
@@ -193,9 +168,8 @@ RUN ansible-galaxy collection install -r /etc/requirements.yml
 COPY --from=unarchive /usr/local/bin/oc /usr/local/bin/openshift-install /usr/local/bin/oc-mirror /usr/local/bin/
 
 # OpenShift Operator CLIs
-COPY --from=unarchive /usr/local/bin/tkn /usr/local/bin/kn /usr/local/bin/argocd /usr/local/bin/roxctl /usr/local/bin/
-COPY --from=unarchive /usr/local/bin/virtctl /usr/local/bin/kubectl-mtv /usr/local/bin/velero /usr/local/bin/kubectl-oadp /usr/local/bin/
-COPY --from=hypershift /usr/bin/hcp /usr/local/bin/hcp
+COPY --from=unarchive /usr/local/bin/tkn /usr/local/bin/kn /usr/local/bin/argocd /usr/local/bin/
+COPY --from=unarchive /usr/local/bin/virtctl /usr/local/bin/kubectl-oadp /usr/local/bin/
 
 # External tools
 COPY --from=unarchive /usr/local/bin/helm /usr/local/bin/helmfile /usr/local/bin/vault /usr/local/bin/govc /usr/local/bin/yq /usr/local/bin/stern /usr/local/bin/kubectx /usr/local/bin/kubens /usr/local/bin/
@@ -209,7 +183,7 @@ COPY --from=unarchive /completions/ /etc/bash_completion.d/
 # -autocomplete-install would wire into a dotfile. govc has no completion at all and the one
 # of kubectl-oadp blocks on a cluster connection, so both are left out.
 RUN ln -s oc /usr/local/bin/kubectl \
- && for tool in oc kubectl openshift-install helm helmfile tkn kn argocd velero virtctl roxctl hcp kubectl-mtv; do \
+ && for tool in oc kubectl openshift-install helm helmfile tkn kn argocd virtctl; do \
         "$tool" completion bash > "/etc/bash_completion.d/$tool"; \
     done \
  && oc-mirror completion bash --v2 > /etc/bash_completion.d/oc-mirror \

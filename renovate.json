@@ -1,10 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    "helpers:pinGitHubActionDigests"
   ],
   "prConcurrentLimit": 20,
   "prHourlyLimit": 0,
+  "minimumReleaseAge": "3 days",
+  "minimumReleaseAgeBehaviour": "timestamp-optional",
   "customManagers": [
     {
       "customType": "regex",
@@ -15,6 +18,17 @@
         "#\\s*renovate:\\s*datasource=(?<datasource>[^\\s]+)\\s+depName=(?<depName>[^\\s]+)\\nARG\\s+\\w+=(?<currentValue>[^\\s]+)"
       ],
       "extractVersionTemplate": "^v?(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "semantic-release is installed ad hoc with npx in the release workflow",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/release\\.yaml$/"
+      ],
+      "matchStrings": [
+        "npx -p (?<depName>semantic-release)@(?<currentValue>[^\\s]+)"
+      ],
+      "datasourceTemplate": "npm"
     }
   ],
   "packageRules": [
