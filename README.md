@@ -18,7 +18,6 @@ All-in-one container image for OpenShift CI/CD pipelines. Based on Red Hat UBI 9
 | `yq` | YAML/JSON/XML processor |
 | `oc-mirror` | Mirroring of releases and Operators for disconnected installs |
 | `virtctl` | OpenShift Virtualization / KubeVirt CLI |
-| `kubectl-mtv` | Migration Toolkit for Virtualization CLI (`oc mtv`) |
 | `velero` / `kubectl-oadp` | Backup and restore via OADP (`oc oadp`) |
 | `tkn` | OpenShift Pipelines (Tekton) CLI |
 | `kn` | OpenShift Serverless (Knative) CLI |
