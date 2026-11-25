@@ -62,9 +62,6 @@ commandTests:
   - name: "kubectl-oadp exists"
     command: "kubectl-oadp"
     args: ["version", "--client-only"]
-  - name: "roxctl exists"
-    command: "roxctl"
-    args: ["version"]
   - name: "oc-mirror exists"
     command: "oc-mirror"
     args: ["--v2", "--version"]
@@ -85,4 +82,4 @@ commandTests:
     args: ["-c", "source /etc/bash_completion.d/kubectx && complete -p kubectx"]
   - name: "every completion loads in an interactive shell"
     command: "bash"
-    args: ["-ic", "for t in oc kubectl openshift-install helm helmfile tkn kn argocd velero virtctl roxctl kubectl-mtv oc-mirror stern yq vault kubectx kubens; do complete -p $t > /dev/null || { echo missing completion: $t; exit 1; }; done"]
+    args: ["-ic", "for t in oc kubectl openshift-install helm helmfile tkn kn argocd velero virtctl kubectl-mtv oc-mirror stern yq vault kubectx kubens; do complete -p $t > /dev/null || { echo missing completion: $t; exit 1; }; done"]

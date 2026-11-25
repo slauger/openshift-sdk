@@ -23,7 +23,6 @@ All-in-one container image for OpenShift CI/CD pipelines. Based on Red Hat UBI 9
 | `tkn` | OpenShift Pipelines (Tekton) CLI |
 | `kn` | OpenShift Serverless (Knative) CLI |
 | `argocd` | OpenShift GitOps (Argo CD) CLI |
-| `roxctl` | Advanced Cluster Security CLI |
 | `stern` | Multi-pod log tailing |
 | `kubectx` / `kubens` | Fast context and namespace switching |
 

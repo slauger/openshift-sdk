@@ -31,8 +31,6 @@ ARG KUBECTL_MTV_RELEASE=0.3.36
 ARG VELERO_RELEASE=1.19.0
 # renovate: datasource=github-tags depName=migtools/oadp-cli
 ARG KUBECTL_OADP_RELEASE=0.3.3
-# renovate: datasource=github-releases depName=stackrox/stackrox
-ARG ROXCTL_RELEASE=4.11.7
 
 RUN dnf -y install unzip && dnf clean all
 
@@ -128,10 +126,6 @@ RUN curl -vfLO https://github.com/migtools/oadp-cli/releases/download/v${KUBECTL
     mv kubectl-oadp /usr/local/bin/kubectl-oadp && \
     rm kubectl-oadp_v${KUBECTL_OADP_RELEASE}_linux_amd64.tar.gz
 
-# roxctl Binary (Advanced Cluster Security)
-RUN curl -vfLo /usr/local/bin/roxctl https://mirror.openshift.com/pub/rhacs/assets/${ROXCTL_RELEASE}/bin/Linux/roxctl && \
-    chmod +x /usr/local/bin/roxctl
-
 # oc-mirror Binary, version matched to the release, stable channel as fallback for OKD
 RUN { curl -vfLO https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/${OPENSHIFT_RELEASE}/oc-mirror.rhel9.tar.gz || \
       curl -vfLO https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable/oc-mirror.rhel9.tar.gz; } && \
@@ -190,7 +184,7 @@ RUN ansible-galaxy collection install -r /etc/requirements.yml
 COPY --from=unarchive /usr/local/bin/oc /usr/local/bin/openshift-install /usr/local/bin/oc-mirror /usr/local/bin/
 
 # OpenShift Operator CLIs
-COPY --from=unarchive /usr/local/bin/tkn /usr/local/bin/kn /usr/local/bin/argocd /usr/local/bin/roxctl /usr/local/bin/
+COPY --from=unarchive /usr/local/bin/tkn /usr/local/bin/kn /usr/local/bin/argocd /usr/local/bin/
 COPY --from=unarchive /usr/local/bin/virtctl /usr/local/bin/kubectl-mtv /usr/local/bin/velero /usr/local/bin/kubectl-oadp /usr/local/bin/
 
 # External tools
@@ -205,7 +199,7 @@ COPY --from=unarchive /completions/ /etc/bash_completion.d/
 # -autocomplete-install would wire into a dotfile. govc has no completion at all and the one
 # of kubectl-oadp blocks on a cluster connection, so both are left out.
 RUN ln -s oc /usr/local/bin/kubectl \
- && for tool in oc kubectl openshift-install helm helmfile tkn kn argocd velero virtctl roxctl kubectl-mtv; do \
+ && for tool in oc kubectl openshift-install helm helmfile tkn kn argocd velero virtctl kubectl-mtv; do \
         "$tool" completion bash > "/etc/bash_completion.d/$tool"; \
     done \
  && oc-mirror completion bash --v2 > /etc/bash_completion.d/oc-mirror \
